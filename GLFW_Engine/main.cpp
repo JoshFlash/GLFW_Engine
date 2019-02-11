@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 
-#include "pch.h";
+// #include "pch.h";
 #include <iostream>
 
 #include <GL/glew.h>
@@ -11,7 +11,6 @@ const GLint WIDTH = 800, HEIGHT = 600;
 int main(int argc, char *args[])
 {
 	std::cout << "Initialising GLFW..." << std::endl;
-	system("pause");
 
 	// start SDL or get Init error
 	if (!glfwInit())
@@ -52,7 +51,7 @@ int main(int argc, char *args[])
 
 	/**** GLEW setup ****/
 
-	// set context in order to draw to main window 
+	// set context in order to draw to main window
 	glfwMakeContextCurrent(mainWindow);
 
 	// allow modern extension features
