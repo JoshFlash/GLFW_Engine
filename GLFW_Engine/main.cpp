@@ -8,62 +8,16 @@
 
 const GLint WIDTH = 800, HEIGHT = 600;
 
+bool initMainWindowContext(GLFWwindow* &);
+
 int main(int argc, char *args[])
 {
-	std::cout << "Initialising GLFW..." << std::endl;
+	GLFWwindow* mainWindow;
 
-	// start SDL or get Init error
-	if (!glfwInit())
+	if (!initMainWindowContext(mainWindow))
 	{
-		std::cout << "[GLFW] Failed to initialise GLFW!" << std::endl;
-		glfwTerminate();
-		return 1;
-	}
-
-	/**** set the SDL OpenGL properties ****/
-
-	// set OpenGL version to 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
-	// set the Profile Mask to Core profile which will not allow use of deprecated features from previous versions of OpenGL
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-	/**** Create main window ****/
-
-	// create window centered with defined dimensions
-	GLFWwindow *mainWindow = glfwCreateWindow(
-		WIDTH,
-		HEIGHT,
-		"GLFW Test Window",
-		NULL,
-		NULL
-	);
-
-	// quit if windows failed to be created
-	if (!mainWindow)
-	{
-		std::cout << "[GLFW] Unable to create main window. Error: " << std::endl;
-		glfwTerminate();
-		return 1;
-	}
-
-	/**** GLEW setup ****/
-
-	// set context in order to draw to main window
-	glfwMakeContextCurrent(mainWindow);
-
-	// allow modern extension features
-	glewExperimental = GL_TRUE;
-
-	// init GLEW or quit if there is an error
-	if (glewInit() != GLEW_OK)
-	{
-		std::cout << "GLEW initialisation failed!" << std::endl;
-		glfwDestroyWindow(mainWindow);
-		glfwTerminate();
-		return 1;
+		std::cout << "Failed to initialise window context! Exiting..." << std::endl;
+		return 0;
 	}
 
 	// get the frame buffer size
@@ -88,4 +42,65 @@ int main(int argc, char *args[])
 	//Quit SDL
 	glfwTerminate();
 	return 0;
+}
+
+bool initMainWindowContext(GLFWwindow* &mainWindow)
+{
+	std::cout << "Initialising main window context..." << std::endl;
+
+	// start SDL or get Init error
+	if (!glfwInit())
+	{
+		std::cout << "[GLFW] Failed to initialise GLFW!" << std::endl;
+		glfwTerminate();
+		return false;
+	}
+
+	/**** set the SDL OpenGL properties ****/
+
+	// set OpenGL version to 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	// set the Profile Mask to Core profile which will not allow use of deprecated features from previous versions of OpenGL
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+	/**** Create main window ****/
+
+	// create window centered with defined dimensions
+	mainWindow = glfwCreateWindow(
+		WIDTH,
+		HEIGHT,
+		"GLFW Test Window",
+		NULL,
+		NULL
+	);
+
+	// quit if windows failed to be created
+	if (!mainWindow)
+	{
+		std::cout << "[GLFW] Unable to create main window. Error: " << std::endl;
+		glfwTerminate();
+		return false;
+	}
+
+	/**** GLEW setup ****/
+
+	// set context in order to draw to main window
+	glfwMakeContextCurrent(mainWindow);
+
+	// allow modern extension features
+	glewExperimental = GL_TRUE;
+
+	// init GLEW or quit if there is an error
+	if (glewInit() != GLEW_OK)
+	{
+		std::cout << "GLEW initialisation failed!" << std::endl;
+		glfwDestroyWindow(mainWindow);
+		glfwTerminate();
+		return false;
+	}
+
+	return true;
 }
