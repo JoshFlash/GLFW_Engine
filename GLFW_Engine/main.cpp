@@ -1,20 +1,18 @@
 #define GLEW_STATIC
 
-// #include "pch.h";
 #include <iostream>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 const GLint WIDTH = 800, HEIGHT = 600;
 
-bool initMainWindowContext(GLFWwindow* &);
+GLFWwindow* initMainWindowContext();
 
 int main(int argc, char *args[])
 {
-	GLFWwindow* mainWindow;
-
-	if (!initMainWindowContext(mainWindow))
+	// set up the main window
+	GLFWwindow* mainWindow = initMainWindowContext();
+	if (!mainWindow)
 	{
 		std::cout << "Failed to initialise window context! Exiting..." << std::endl;
 		return 0;
@@ -33,7 +31,7 @@ int main(int argc, char *args[])
 		glfwPollEvents();
 
 		// clear window
-		glClearColor(0.2f, 0.4f, 0.6f, 0.8f);
+		glClearColor(0.2f, 0.4f, 0.6f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glfwSwapBuffers(mainWindow);
@@ -44,7 +42,7 @@ int main(int argc, char *args[])
 	return 0;
 }
 
-bool initMainWindowContext(GLFWwindow* &mainWindow)
+GLFWwindow* initMainWindowContext()
 {
 	std::cout << "Initialising main window context..." << std::endl;
 
@@ -53,7 +51,7 @@ bool initMainWindowContext(GLFWwindow* &mainWindow)
 	{
 		std::cout << "[GLFW] Failed to initialise GLFW!" << std::endl;
 		glfwTerminate();
-		return false;
+		return nullptr;
 	}
 
 	/**** set the SDL OpenGL properties ****/
@@ -69,7 +67,7 @@ bool initMainWindowContext(GLFWwindow* &mainWindow)
 	/**** Create main window ****/
 
 	// create window centered with defined dimensions
-	mainWindow = glfwCreateWindow(
+	GLFWwindow* mainWindow = glfwCreateWindow(
 		WIDTH,
 		HEIGHT,
 		"GLFW Test Window",
@@ -82,7 +80,7 @@ bool initMainWindowContext(GLFWwindow* &mainWindow)
 	{
 		std::cout << "[GLFW] Unable to create main window. Error: " << std::endl;
 		glfwTerminate();
-		return false;
+		return nullptr;
 	}
 
 	/**** GLEW setup ****/
@@ -99,8 +97,8 @@ bool initMainWindowContext(GLFWwindow* &mainWindow)
 		std::cout << "GLEW initialisation failed!" << std::endl;
 		glfwDestroyWindow(mainWindow);
 		glfwTerminate();
-		return false;
+		return nullptr;
 	}
 
-	return true;
+	return mainWindow;
 }
