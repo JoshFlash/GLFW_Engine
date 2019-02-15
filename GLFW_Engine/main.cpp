@@ -13,7 +13,7 @@ GLuint VAO, VBO, shaderID;
 static const char* vertexShader = "					\n\
 #version 330										\n\
 													\n\
-layout (location) in vec3 pos						\n\
+layout (location = 0) in vec3 pos;					\n\
 													\n\
 void main()											\n\
 {													\n\
@@ -24,7 +24,7 @@ void main()											\n\
 static const char* fragmentShader = "				\n\
 #version 330										\n\
 													\n\
-out vec4 colour										\n\
+out vec4 colour;									\n\
 													\n\
 void main()											\n\
 {													\n\
@@ -71,13 +71,13 @@ void addShader(GLuint shaderProgramID, const char* shaderCode, GLenum shaderType
 	glCompileShader(shader);
 
 	GLint result = 0;
-	GLchar errorLog[1024] =  { 0 };
+	GLchar errorLog[1024] = { 0 };
 
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
 	if (!result)
 	{
-		glGetProgramInfoLog(shader, sizeof(errorLog), NULL, errorLog);
-		printf("Error compiling %d shader program: %s\n", shaderType, errorLog);
+		glGetShaderInfoLog(shader, sizeof(errorLog), NULL, errorLog);
+		fprintf(stderr, "Error compiling %d shader program: %s\n", shaderType, errorLog);
 		return;
 	}
 
